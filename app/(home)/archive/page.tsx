@@ -1,6 +1,7 @@
 import { getEmployees } from "@/app/actions/get-employee";
 import { getSwapsByKey } from "@/app/actions/swap-action";
 import { ArchiveSwapPage } from "@/features/archive";
+import { Suspense } from "react";
 
 export default async function Page() {
   const dateNow = new Date();
@@ -14,5 +15,9 @@ export default async function Page() {
     role: string;
     mail: string;
   }[];
-  return <ArchiveSwapPage swapsList={swapsList} employees={employees} />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ArchiveSwapPage swapsList={swapsList} employees={employees} />
+    </Suspense>
+  );
 }
