@@ -25,7 +25,7 @@ type Props = {
   disabled?: boolean;
   className?: string;
   orientation?: "vertical" | "horizontal";
-  onChange?: (value: string | null) => void;
+  onChange?: (option: SelectOption | null) => void;
   withOutBorder?: boolean;
 };
 
@@ -50,10 +50,15 @@ export default function SelectInput({
         const isDisabled = disabled || field.disabled;
         const selected = data.find((item) => item.value === field.value);
 
-        const setValue = (value: string | null) => {
-          field.onChange(value);
-          onChange?.(value);
-        };
+       const setValue = (value: string | null) => {
+  field.onChange(value);
+
+  const selectedOption =
+    data.find((item) => item.value === value) ?? null;
+
+  onChange?.(selectedOption);
+};
+
 
         return (
           <Field data-invalid={fieldState.invalid} orientation={orientation}>
@@ -74,8 +79,8 @@ export default function SelectInput({
                   onBlur={field.onBlur}
                   className={cn(
                     className,
-                    "w-full [&>svg]:hidden h-11! bg-border flex items-center justify-start",
-                    field.value && "pr-2 text-blue-700 justify-center",
+                    "w-full [&>svg]:hidden h-12! bg-border flex items-center justify-start",
+                    field.value && "pr-2 text-white justify-center bg-blue-500",
                     !field.value && "text-muted-foreground",
                     field.value &&
                       withOutBorder &&
@@ -87,14 +92,14 @@ export default function SelectInput({
                   </SelectValue>
                 </SelectTrigger>
 
-                <SelectContent className="w-full p-2 [&>svg]:hidden">
+                <SelectContent side="bottom" avoidCollisions={false} position="item-aligned"  className="w-full p-2 [&>svg]:hidden">
                   {data.map((item) => (
                     <SelectItem
                       key={item.value}
                       value={item.value}
                       className={cn(
                         field.value === item.value &&
-                          "text-green-600! focus:text-green-600! data-highlighted:text-green-600! **:text-green-600!",
+                          "text-white",
                       )}
                     >
                       {item.label}
@@ -108,7 +113,7 @@ export default function SelectInput({
                   type="button"
                   aria-label="reset"
                   onClick={() => setValue(null)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-sm p-1 text-red-500 hover:text-foreground"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-sm p-1 text-white hover:text-foreground"
                 >
                   <Trash2 className="size-3.5" strokeWidth={1.5} />
                 </button>

@@ -1,17 +1,15 @@
 import { z } from "zod";
 
 export const swapSchema = z.object({
-  employee: z.string(),
-  idEmployee: z.string(),
-  employee2: z.string(),
-  idEmployee2: z.string(),
+  employee: z.string().min(1, "Обязательное поле"),
+  idEmployee: z.string().min(1, "Обязательное поле"),
+  employee2: z.string().min(1, "Обязательное поле"),
+  idEmployee2: z.string().min(1, "Обязательное поле"),
   role: z.string(),
-  typeSwap: z.enum(["swap", "take", ""]),
-  date: z.string(),
+  typeSwap: z.string().min(1, "Обязательное поле"),
+  date: z.string().min(1, "Обязательное поле"),
   dateRegister: z.string(),
-  year: z.string(),
-  month: z.string(),
-  shift: z.string(),
+  shift: z.string().min(1, "Обязательное поле"),
   isAcceptedEmployee2: z.boolean(),
   isAcceptedAdmin: z.boolean(),
 });
@@ -27,8 +25,6 @@ export const swapDefaultValues: SwapFormData = {
   typeSwap: "",
   date: "",
   dateRegister: "",
-  year: "",
-  month: "",
   shift: "",
   isAcceptedEmployee2: false,
   isAcceptedAdmin: false,

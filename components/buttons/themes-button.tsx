@@ -1,7 +1,6 @@
 "use client";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useState, useEffect } from "react";
 
 export default function ThemesButton() {
   const { theme, setTheme } = useTheme();
@@ -11,13 +10,6 @@ export default function ThemesButton() {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
 
   return (
     <button

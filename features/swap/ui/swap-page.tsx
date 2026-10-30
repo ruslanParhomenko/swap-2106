@@ -6,15 +6,19 @@ import { SchedulesResult } from "@/features/schedule/actions/get-schedules";
 import { useWatch } from "react-hook-form";
 import { MONTHS } from "@/utils/get-month-days";
 import { rowShiftsType } from "@/features/schedule/model/type";
+import type { Session } from "next-auth";
 
 export function SwapPage({
   employees,
   schedules,
+  session,
 }: {
   employees: { id: string; name: string; role: string; mail: string }[];
   schedules: SchedulesResult;
+  session: Session;
 }) {
-  const { form, onSubmit } = useSwapForm();
+
+  const { form, onSubmit } = useSwapForm(session);
   const selectedMonth = useWatch({
     control: form.control,
     name: "date",
@@ -29,7 +33,7 @@ export function SwapPage({
 
   const selectedEmployee = [
     ...new Set(
-      scheduleByMonth.map((shift) => {
+      scheduleByMonth.filter((shift) => shift.employeeId !== session.user.id).map((shift) => {
         return {
           value: shift.employeeId,
           label: shift.employee,
@@ -37,6 +41,7 @@ export function SwapPage({
       }),
     ),
   ];
+
 
   return (
     <FormWrapper form={form} onSubmit={onSubmit}>

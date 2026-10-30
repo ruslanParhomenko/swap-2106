@@ -22,6 +22,8 @@ export default function SwapListTable({
   swapsList: SwapActionType[];
   employees: { id: string; name: string; role: string; mail: string }[];
 }) {
+
+  console.log("swapsList", swapsList);
   const { data: session } = useSession();
   const emailUser = session?.user?.email;
 
@@ -37,8 +39,8 @@ export default function SwapListTable({
           const IconComponent =
             SHIFT_VALUES[swap.typeSwap as keyof typeof SHIFT_VALUES];
 
-          const isChecked = swap.isAccepted;
-          const isRefused = swap.isRefused;
+          const isChecked = swap.isAcceptedAdmin;
+          const isRefused = swap.isAcceptedEmployee2;
 
           const isOwner =
             idUser !== undefined &&
@@ -58,28 +60,26 @@ export default function SwapListTable({
                 <Trash2Icon
                   size={14}
                   strokeWidth={1.5}
-                  onClick={async () => {
-                    if (isOwner) {
-                      await updateRefuseStatus(
-                        `${swap.year}-${swap.month}`,
-                        swap.id,
-                        true,
-                      );
-                      toast.success("Заявка отклонена");
-                    } else {
-                      toast.error("Вы не можете отклонить заявку");
-                    }
-                  }}
+                  // onClick={async () => {
+                  //   if (isOwner) {
+                  //     await updateRefuseStatus(
+                  //       `${swap.year}-${swap.month}`,
+                  //       swap.id,
+                  //       true,
+                  //     );
+                  //     toast.success("Заявка отклонена");
+                  //   } else {
+                  //     toast.error("Вы не можете отклонить заявку");
+                  //   }
+                  // }}
                 />
               </TableCell>
               <TableCell className="text-blue-500">
-                {swap.dateRegister
-                  ? format(new Date(swap.dateRegister), "dd- HH:mm")
-                  : "-"}
+                {swap.dateRegister}
               </TableCell>
               <TableCell>
-                {swap.employee1.split(" ")[0]}{" "}
-                {swap.employee1.split(" ")[1]?.[0] || ""}
+                {swap.employee.split(" ")[0]}{" "}
+                {swap.employee.split(" ")[1]?.[0] || ""}
               </TableCell>
               <TableCell>
                 {IconComponent ? (
@@ -102,16 +102,16 @@ export default function SwapListTable({
               </TableCell>
               <TableCell className="w-10 text-center pr-4">
                 <Checkbox
-                  checked={swap.isAccepted ?? false}
+                  checked={swap.isAcceptedAdmin ?? false}
                   onCheckedChange={async (checked) => {
                     const value = checked === true;
 
-                    isAdmin &&
-                      (await updateSwapStatus(
-                        `${swap.year}-${swap.month}`,
-                        swap.id,
-                        value,
-                      ));
+                    isAdmin && ""
+                      // (await updateSwapStatus(
+                      //   `${swap.year}-${swap.month}`,
+                      //   swap.id,
+                      //   value,
+                      // ));
                   }}
                 />
               </TableCell>

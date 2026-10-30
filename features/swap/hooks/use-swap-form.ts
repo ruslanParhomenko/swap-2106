@@ -6,15 +6,40 @@ import {
   swapSchema,
 } from "../model/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-export default function useSwapForm() {
+import { Session } from "next-auth";
+import { formatDateTime } from "@/utils/get-formatted-date";
+import { toast } from "sonner";
+import { createSwap } from "../actions/create-swap";
+
+export default function useSwapForm(session: Session) {
+
   const form = useForm<SwapFormData>({
     resolver: zodResolver(swapSchema),
-    defaultValues: swapDefaultValues,
+    values: {
+      ...swapDefaultValues,
+      employee: session?.user?.name || "",
+      idEmployee: session?.user?.id || "",
+      role: session?.user?.role || "",
+    },
   });
 
   const errors = form.formState.errors;
-  const onSubmit: SubmitHandler<SwapFormData> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<SwapFormData> = async (data) => {
+    const currentDateTime = formatDateTime(new Date());
+
+    const formattedData = {
+      ...data,
+      dateRegister: currentDateTime,
+    };
+
+    console.log(formattedData);
+
+    await createSwap({
+      data: formattedData,
+    });
+
+    form.reset();
+    toast.success("Заявка отправлена");
   };
   return {
     form,

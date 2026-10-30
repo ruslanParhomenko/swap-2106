@@ -11,6 +11,16 @@ export default function SwapForm({
 }) {
   const form = useFormContext();
 
+  const value = form.watch();
+
+  const {
+  isValid,
+  isSubmitting,
+} = form.formState;
+
+
+  console.log("value", value);
+
   const selectedEmployee2 = useWatch({
     control: form.control,
     name: "employee2",
@@ -28,11 +38,14 @@ export default function SwapForm({
         data={SHIFTS_VALUES}
       />
       <SelectInput
-        fieldName="employee2"
+        fieldName="idEmployee2"
         placeHolder={selectedEmployee.length > 0 ? "Выбрать сотрудника" : ""}
         data={selectedEmployee}
         className="w-full"
         disabled={selectedEmployee.length === 0}
+        onChange={(value) => {
+          form.setValue("employee2", value?.label || "");
+        }}
       />
       <SelectInput
         fieldName="typeSwap"
@@ -44,15 +57,19 @@ export default function SwapForm({
       <div className="my-8 flex justify-end">
         <Button
           type="submit"
-          variant="default"
-          disabled={false}
-          className={`py-2 px-4 rounded-md text-white transition-colors md:w-32 ${
-            true
+          variant="secondary"
+          disabled={!isValid}
+          className={`py-2 h-12 px-4 rounded-md text-white transition-colors w-32 ${
+            !isValid
               ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-600"
+              : "text-blue-600 font-bold"
           }`}
         >
-          {true ? "Отправка..." : "Отправить"}
+          {!isValid
+            ? "Заполните..."
+            : isSubmitting
+            ? "Отправка..."
+            : "Отправить"}
         </Button>
       </div>
     </div>

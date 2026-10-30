@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-
 import NavHeader from "@/components/nav-layout/nav-header";
 import NavFooter from "@/components/nav-layout/nav-footer";
 

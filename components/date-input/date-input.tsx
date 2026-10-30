@@ -72,8 +72,8 @@ export default function DateInput({
                   onBlur={field.onBlur}
                   className={cn(
                     buttonVariants({ variant: "outline" }),
-                    "w-full justify-start font-normal h-11 tracking-wider border-2 bg-border",
-                    selected && "text-blue-700 justify-center",
+                    "w-full justify-start font-normal h-12 tracking-wider border-2 bg-border",
+                    selected && "text-white bg-blue-500 justify-center",
                     !selected && "text-muted-foreground",
                     selected &&
                       withOutBorder &&
@@ -105,7 +105,7 @@ export default function DateInput({
                   type="button"
                   aria-label="reset date"
                   onClick={() => setValue(null)}
-                  className="text-red-500 hover:text-foreground hover:bg-accent absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1 transition-colors"
+                  className="text-white hover:text-foreground hover:bg-accent absolute top-1/2 right-3 -translate-y-1/2 rounded-full p-1 transition-colors"
                 >
                   <Trash2 className="size-3.5" strokeWidth={1.5} />
                 </button>

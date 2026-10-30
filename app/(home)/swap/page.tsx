@@ -21,6 +21,11 @@ export default function Page() {
 
 async function SwapContent() {
   const session = await getServerSession(authOptions);
+
+  if (!session) {
+    return <div>Failed to load session</div>;
+  }
+
   const role = session?.user?.role;
   const employees = await getEmployees();
 
@@ -42,5 +47,5 @@ async function SwapContent() {
     roleKey,
   });
 
-  return <SwapPage schedules={schedules} employees={employees} />;
+  return <SwapPage schedules={schedules} employees={employees} session={session} />;
 }
