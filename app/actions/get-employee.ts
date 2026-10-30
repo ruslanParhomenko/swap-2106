@@ -1,11 +1,13 @@
 "use server";
 
+import { EMPLOYEES_ACTION_TAG } from "@/constants/actions-tags";
 import { db } from "@/lib/firebase";
 import { redis } from "@/lib/redis";
+import { cacheLife, cacheTag } from "next/cache";
 
-const EMPLOYEES_KEY = "employees";
+const actionTag = EMPLOYEES_ACTION_TAG;
 
-const RESTAURANT_EMPLOYEES = new Set(["waiters", "barmen", "mngr", "cook"]);
+const RESTAURANT_EMPLOYEES = ["waiters", "barmen"] as const;
 
 export type GetEmployees = {
   id: string;
@@ -16,12 +18,20 @@ export type GetEmployees = {
 };
 
 export async function getEmployees(): Promise<GetEmployees[]> {
-  const cached = await redis.get<GetEmployees[]>(EMPLOYEES_KEY);
+  "use cache";
+
+  cacheLife("max");
+  cacheTag(actionTag);
+
+  const cached = await redis.get<GetEmployees[]>(actionTag);
 
   if (cached) {
     return cached.filter(
       (employee) =>
-        employee.status === "active" && RESTAURANT_EMPLOYEES.has(employee.role),
+        employee.status === "active" &&
+        RESTAURANT_EMPLOYEES.includes(
+          employee.role as (typeof RESTAURANT_EMPLOYEES)[number],
+        ),
     );
   }
 
@@ -41,7 +51,10 @@ export async function getEmployees(): Promise<GetEmployees[]> {
     })
     .filter(
       (employee) =>
-        employee.status === "active" && RESTAURANT_EMPLOYEES.has(employee.role),
+        employee.status === "active" &&
+        RESTAURANT_EMPLOYEES.includes(
+          employee.role as (typeof RESTAURANT_EMPLOYEES)[number],
+        ),
     );
 
   return employees;

@@ -1,5 +1,5 @@
-import { getEmployees } from "@/app/action/get-employee";
-import { getSwapsByKey } from "@/app/action/swap-action";
+import { getEmployees } from "@/app/actions/get-employee";
+import { getSwapsByKey } from "@/app/actions/swap-action";
 import { ArchiveSwapPage } from "@/features/archive";
 
 export default async function Page() {

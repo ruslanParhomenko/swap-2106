@@ -1,6 +1,6 @@
 import GoogleProvider from "next-auth/providers/google";
 import type { NextAuthOptions } from "next-auth";
-import { getEmployees } from "@/app/action/get-employee";
+import { getEmployees } from "@/app/actions/get-employee";
 
 const USER_EMAIL = process.env.USER_EMAIL;
 
@@ -19,7 +19,10 @@ async function resolveUser(email?: string | null) {
 
   const employees = (await getEmployees()).filter((u) => u.status);
   const dbUser = employees.find((u) => u.mail?.toLowerCase() === mail);
-  return dbUser ? { role: dbUser.role, name: dbUser.name, email: mail } : null;
+
+  return dbUser
+    ? { role: dbUser.role, name: dbUser.name, email: mail, id: dbUser.id }
+    : null;
 }
 
 export const authOptions: NextAuthOptions = {
@@ -51,6 +54,7 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role as string;
         session.user.email = token.email as string;
         session.user.name = token.name as string;
+        session.user.id = token.id as string;
       }
       return session;
     },

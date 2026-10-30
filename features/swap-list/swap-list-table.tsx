@@ -7,7 +7,7 @@ import {
   SwapActionType,
   updateRefuseStatus,
   updateSwapStatus,
-} from "@/app/action/swap-action";
+} from "@/app/actions/swap-action";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { Trash2Icon } from "lucide-react";

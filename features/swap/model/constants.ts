@@ -1,7 +1,6 @@
 export const SHIFT_ACTIONS = [
   { value: "swap", label: "Обмен смен" },
   { value: "take", label: "Взять смену" },
-  { value: "give", label: "Отдать смену" },
 ];
 
 export const SHIFTS_VALUES = [

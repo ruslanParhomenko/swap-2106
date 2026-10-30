@@ -1,4 +1,4 @@
-import { SwapActionType } from "@/app/action/swap-action";
+import { SwapActionType } from "@/app/actions/swap-action";
 import SwapListTable from "@/features/swap-list/swap-list-table";
 
 export function ArchiveSwapPage({

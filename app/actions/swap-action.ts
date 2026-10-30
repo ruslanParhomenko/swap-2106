@@ -51,14 +51,14 @@ export async function createSwap(_state: any, formData: FormData) {
 
   const newItem = {
     id,
-    date: admin.firestore.Timestamp.fromDate(parsedDate),
+    date: parsedDate,
     role,
     employee1,
     idEmployee,
     employee2,
     shift,
     typeSwap,
-    dateRegister: admin.firestore.Timestamp.fromDate(new Date(dateRegister)),
+    dateRegister: dateRegister,
     isAccepted: false,
     isRefused: false,
     year,

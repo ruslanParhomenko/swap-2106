@@ -1,65 +1,124 @@
 "use client";
 
-import { useState } from "react";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "@/components/ui/select";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
-import { Label } from "../ui/label";
+import { Trash2 } from "lucide-react";
+import { Controller, useFormContext } from "react-hook-form";
 
-type Option = { value: string; label: string };
+export type SelectOption = {
+  value: string;
+  label: string;
+};
+
+type Props = {
+  fieldName: string;
+  fieldLabel?: string;
+  placeHolder?: string;
+  data: SelectOption[];
+  disabled?: boolean;
+  className?: string;
+  orientation?: "vertical" | "horizontal";
+  onChange?: (value: string | null) => void;
+  withOutBorder?: boolean;
+};
 
 export default function SelectInput({
-  options,
-  placeholder,
+  fieldName,
+  fieldLabel,
+  placeHolder,
+  data,
+  disabled,
   className,
-  name,
-}: {
-  options: Option[];
-  placeholder?: string;
-  className?: string;
-  name: string;
-}) {
-  const [value, setValue] = useState<string>("");
+  orientation = "vertical",
+  onChange,
+  withOutBorder = false,
+}: Props) {
+  const { control } = useFormContext();
 
   return (
-    <div className="w-full flex flex-col items-center justify-center">
-      <Label
-        htmlFor={name}
-        className="block w-full text-center text-md  mb-6 cursor-pointer h-6"
-      >
-        {value ? "" : placeholder}
-      </Label>
+    <Controller
+      control={control}
+      name={fieldName}
+      render={({ field, fieldState }) => {
+        const isDisabled = disabled || field.disabled;
+        const selected = data.find((item) => item.value === field.value);
 
-      <Select value={value} onValueChange={setValue}>
-        <SelectTrigger
-          id={name}
-          className={cn(
-            "[&>svg]:hidden justify-center md:w-120 w-full text-blue-600 bg-border h-14! font-bold",
-            className,
-          )}
-        >
-          <SelectValue placeholder="" className="font-bold" />
-        </SelectTrigger>
+        const setValue = (value: string | null) => {
+          field.onChange(value);
+          onChange?.(value);
+        };
 
-        <SelectContent>
-          {options.map((option) => (
-            <SelectItem
-              key={option.value}
-              value={option.value}
-              className="[&>span]:hidden"
-            >
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        return (
+          <Field data-invalid={fieldState.invalid} orientation={orientation}>
+            {fieldLabel && (
+              <FieldLabel htmlFor={field.name}>{fieldLabel}</FieldLabel>
+            )}
 
-      <input type="hidden" name={name} value={value} />
-    </div>
+            <div className="relative w-full">
+              <Select
+                name={field.name}
+                value={field.value ?? null}
+                onValueChange={(value) => setValue(value)}
+                disabled={isDisabled}
+              >
+                <SelectTrigger
+                  id={fieldName}
+                  aria-invalid={fieldState.invalid}
+                  onBlur={field.onBlur}
+                  className={cn(
+                    className,
+                    "w-full [&>svg]:hidden h-11! bg-border flex items-center justify-start",
+                    field.value && "pr-2 text-blue-700 justify-center",
+                    !field.value && "text-muted-foreground",
+                    field.value &&
+                      withOutBorder &&
+                      "border-transparent shadow-none text-green-600 pl-2",
+                  )}
+                >
+                  <SelectValue placeholder={placeHolder}>
+                    {selected?.label ?? placeHolder}
+                  </SelectValue>
+                </SelectTrigger>
+
+                <SelectContent className="w-full p-2 [&>svg]:hidden">
+                  {data.map((item) => (
+                    <SelectItem
+                      key={item.value}
+                      value={item.value}
+                      className={cn(
+                        field.value === item.value &&
+                          "text-green-600! focus:text-green-600! data-highlighted:text-green-600! **:text-green-600!",
+                      )}
+                    >
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {field.value && !isDisabled && !withOutBorder && (
+                <button
+                  type="button"
+                  aria-label="reset"
+                  onClick={() => setValue(null)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-sm p-1 text-red-500 hover:text-foreground"
+                >
+                  <Trash2 className="size-3.5" strokeWidth={1.5} />
+                </button>
+              )}
+            </div>
+
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          </Field>
+        );
+      }}
+    />
   );
 }
