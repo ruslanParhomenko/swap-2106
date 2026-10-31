@@ -1,12 +1,12 @@
-import { SwapActionType } from "@/app/actions/swap-action";
 import SwapListTable from "@/features/archive-swap/swap-list-table";
 import { GetSwapData } from "../actions/get-swaps";
+import { GetEmployees } from "@/app/actions/get-employee";
 
 export function ArchiveSwapPage({
   employees,
   swapsList,
 }: {
-  employees: { id: string; name: string; role: string; mail: string }[];
+  employees: GetEmployees[];
   swapsList: GetSwapData[];
 }) {
   return <SwapListTable swapsList={swapsList} employees={employees} />;

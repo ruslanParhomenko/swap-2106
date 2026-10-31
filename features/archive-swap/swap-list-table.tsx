@@ -1,7 +1,6 @@
 "use client";
 
 import { Fragment, useRef, useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { format, parse } from "date-fns";
 import { SHIFT_VALUES } from "./constants";
@@ -19,7 +18,7 @@ const userEmail = process.env.NEXT_PUBLIC_USER_EMAIL;
 
 const SWIPE_THRESHOLD = 0.35; // доля ширины строки для срабатывания
 const SWIPE_MAX = 0.5; // максимальный сдвиг (доля ширины)
-const GRID_COLS = "32px 1.3fr 1fr 24px 1fr 44px 28px 40px";
+const GRID_COLS = "6% 10% 22% 8% 22% 15% 10% 6%";
 export default function SwapListTable({
   swapsList,
   employees,
@@ -239,7 +238,7 @@ function SwapRow({
             onPointerUp={handlePointerUp}
             onPointerCancel={resetSwipe}
             className={cn(
-              "relative z-10 grid items-center bg-background px-1 py-3 text-xs",
+              "relative z-10 grid items-center justify-between text-center bg-background px-1 py-3 text-xs",
               isChecked && "text-muted-foreground **:text-muted-foreground",
               isAccepted && "opacity-60",
               (canRight || canLeft) && "cursor-grab",
@@ -260,9 +259,9 @@ function SwapRow({
                 <Check className="h-4 w-4 text-muted-foreground/40" />
               )}
             </div>
-            <div className="text-blue-500">{swap.dateRegister}</div>
+            <div className="text-blue-500">{swap.dateRegister?.split(" ")[1]}</div>
             <div>{short(swap.employee)}</div>
-            <div>
+            <div className="flex justify-center">
               {IconComponent ? (
                 <IconComponent className="h-3 w-3 text-red-500" />
               ) : (
