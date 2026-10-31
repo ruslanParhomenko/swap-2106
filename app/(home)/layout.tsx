@@ -12,7 +12,7 @@ export default function HomeLayout({
       <Suspense fallback={<div>...</div>}>
         <NavHeader />
       </Suspense>
-      <div className="flex flex-1 justify-center">{children}</div>
+      <div className="flex flex-1 justify-center md:mx-auto">{children}</div>
       <Suspense fallback={null}>
         <NavFooter />
       </Suspense>

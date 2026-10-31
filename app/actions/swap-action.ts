@@ -7,12 +7,9 @@ import { unstable_cache, updateTag } from "next/cache";
 
 export type SwapActionType = SwapFormData & {
   id: string;
-
 };
 
 const SWAP_ACTION_TAG = "swap_actions";
-
-
 
 //delete
 
@@ -36,7 +33,7 @@ export async function deleteSwap(uniqueKey: string, id: string) {
 
 //update
 
-export async function updateSwapStatus(
+export async function updateSwapStatusAdmin(
   uniqueKey: string,
   id: string,
   isAccepted: boolean,
@@ -83,4 +80,3 @@ export async function updateRefuseStatus(
 
   updateTag(SWAP_ACTION_TAG);
 }
-
