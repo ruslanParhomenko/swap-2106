@@ -2,19 +2,14 @@ import GoogleProvider from "next-auth/providers/google";
 import type { NextAuthOptions } from "next-auth";
 import { getEmployees } from "@/app/actions/get-employee";
 
-const USER_EMAIL = process.env.USER_EMAIL;
-
-const STAFF_EMAIL = process.env.STAFF_EMAIL;
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
 async function resolveUser(email?: string | null) {
   const mail = email;
   if (!mail) return null;
 
-  if (USER_EMAIL && mail === USER_EMAIL) {
-    return { role: "user", name: "user", email: mail };
-  }
-  if (STAFF_EMAIL && mail === STAFF_EMAIL) {
-    return { role: "staff", name: "staff", email: mail };
+  if (ADMIN_EMAIL && mail === ADMIN_EMAIL) {
+    return { role: "admin", name: "admin", email: mail };
   }
 
   const employees = (await getEmployees()).filter((u) => u.status);

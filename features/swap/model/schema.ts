@@ -6,7 +6,7 @@ export const swapSchema = z.object({
   employee2: z.string().min(1, "Обязательное поле"),
   idEmployee2: z.string().min(1, "Обязательное поле"),
   role: z.string(),
-  typeSwap: z.string().min(1, "Обязательное поле"),
+  typeSwap: z.string(),
   date: z.string().min(1, "Обязательное поле"),
   dateRegister: z.string(),
   shift: z.string().min(1, "Обязательное поле"),

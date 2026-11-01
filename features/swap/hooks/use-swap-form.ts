@@ -6,12 +6,13 @@ import {
   swapSchema,
 } from "../model/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Session } from "next-auth";
 import { formatDateTime } from "@/utils/get-formatted-date";
 import { toast } from "sonner";
 import { createSwap } from "../actions/create-swap";
+import { useSession } from "next-auth/react";
 
-export default function useSwapForm(session: Session) {
+export default function useSwapForm() {
+  const { data: session } = useSession();
 
   const form = useForm<SwapFormData>({
     resolver: zodResolver(swapSchema),

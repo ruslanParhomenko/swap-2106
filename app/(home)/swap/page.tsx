@@ -7,8 +7,9 @@ import { getServerSession } from "next-auth";
 import { Suspense } from "react";
 
 const ROLE_KEY = {
-  waiter: "bar",
+  waiters: "bar",
   barmen: "bar",
+  admin: "admin",
 };
 
 export default function Page() {
@@ -47,5 +48,5 @@ async function SwapContent() {
     roleKey,
   });
 
-  return <SwapPage schedules={schedules} employees={employees} session={session} />;
+  return <SwapPage schedules={schedules} />;
 }

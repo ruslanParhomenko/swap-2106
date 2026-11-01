@@ -1,1 +1,1 @@
-export { ArchiveSwapPage } from "./ui/archive-swap-page";
+export { ArchivePage } from "./ui/archive-page";

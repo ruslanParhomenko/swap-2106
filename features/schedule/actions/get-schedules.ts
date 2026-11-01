@@ -56,7 +56,6 @@ export async function getSchedulesActual({
   roleKey,
 }: Props): Promise<SchedulesResult> {
   "use cache";
-  console.log(year, month, roleKey);
 
   cacheLife("max");
   cacheTag(actionTag);

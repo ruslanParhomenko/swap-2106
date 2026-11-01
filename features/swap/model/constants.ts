@@ -9,3 +9,5 @@ export const SHIFTS_VALUES = [
   { value: "18", label: "18:00" },
   { value: "20", label: "20:00" },
 ];
+
+export const NOT_WORKING_SHIFTS = ["s", "v", "u"];
