@@ -8,11 +8,11 @@ export default function HomeLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-dvh md:px-8 flex-col justify-between px-2">
+    <div className="flex h-dvh md:px-8 flex-col justify-between">
       <Suspense fallback={<div>...</div>}>
         <NavHeader />
       </Suspense>
-      <div className="flex flex-1 justify-center md:mx-auto">{children}</div>
+      <div className="flex flex-1 justify-center">{children}</div>
       <Suspense fallback={null}>
         <NavFooter />
       </Suspense>

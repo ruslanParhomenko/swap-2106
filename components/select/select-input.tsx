@@ -50,15 +50,14 @@ export default function SelectInput({
         const isDisabled = disabled || field.disabled;
         const selected = data.find((item) => item.value === field.value);
 
-       const setValue = (value: string | null) => {
-  field.onChange(value);
+        const setValue = (value: string | null) => {
+          field.onChange(value);
 
-  const selectedOption =
-    data.find((item) => item.value === value) ?? null;
+          const selectedOption =
+            data.find((item) => item.value === value) ?? null;
 
-  onChange?.(selectedOption);
-};
-
+          onChange?.(selectedOption);
+        };
 
         return (
           <Field data-invalid={fieldState.invalid} orientation={orientation}>
@@ -79,7 +78,7 @@ export default function SelectInput({
                   onBlur={field.onBlur}
                   className={cn(
                     className,
-                    "w-full [&>svg]:hidden h-12! bg-border flex items-center justify-start",
+                    "w-full [&>svg]:hidden h-13! bg-border flex items-center justify-start",
                     field.value && "pr-2 text-white justify-center bg-blue-500",
                     !field.value && "text-muted-foreground",
                     field.value &&
@@ -92,15 +91,17 @@ export default function SelectInput({
                   </SelectValue>
                 </SelectTrigger>
 
-                <SelectContent side="bottom" avoidCollisions={false} position="item-aligned"  className="w-full p-2 [&>svg]:hidden">
+                <SelectContent
+                  side="bottom"
+                  avoidCollisions={false}
+                  position="item-aligned"
+                  className="w-full p-2 [&>svg]:hidden"
+                >
                   {data.map((item) => (
                     <SelectItem
                       key={item.value}
                       value={item.value}
-                      className={cn(
-                        field.value === item.value &&
-                          "text-white",
-                      )}
+                      className={cn(field.value === item.value && "text-white")}
                     >
                       {item.label}
                     </SelectItem>

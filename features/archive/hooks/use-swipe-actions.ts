@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { updateEmployeeAcceptance } from "../actions/update-swap-accept";
 import { updateSwapStatusAdmin } from "../actions/update-swap-admin";
+import { formatDateTime } from "@/utils/get-formatted-date";
 
 export function useSwapActions(docId: string, swapId: string) {
   const [pending, setPending] = useState(false);
@@ -25,7 +26,12 @@ export function useSwapActions(docId: string, swapId: string) {
   const acceptByEmployee = () =>
     run(
       async () => {
-        const res = await updateEmployeeAcceptance(docId, swapId);
+        const dateAcceptedEmployee2 = formatDateTime(new Date());
+        const res = await updateEmployeeAcceptance(
+          docId,
+          swapId,
+          dateAcceptedEmployee2,
+        );
         if (res?.error) throw new Error("Failed to accept swap");
       },
       "swap accepted",
@@ -34,7 +40,16 @@ export function useSwapActions(docId: string, swapId: string) {
 
   const acceptByAdmin = () =>
     run(
-      () => updateSwapStatusAdmin(docId, swapId, true),
+      async () => {
+        const dateAcceptedAdmin = formatDateTime(new Date());
+        const res = await updateSwapStatusAdmin(
+          docId,
+          swapId,
+          true,
+          dateAcceptedAdmin,
+        );
+        if (res?.error) throw new Error("Failed to accept swap by admin");
+      },
       "swap accepted by admin",
       "Failed to accept swap by admin",
     );

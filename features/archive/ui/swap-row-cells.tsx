@@ -5,10 +5,12 @@ import { shortName } from "@/utils/short-name";
 
 type Props = {
   swap: GetSwapData["data"][number];
-  IconComponent?: React.ElementType;
+  idUser: string;
 };
 
-export function SwapRowCells({ swap, IconComponent }: Props) {
+export function SwapRowCells({ swap, idUser }: Props) {
+  console.log("swap", swap);
+  console.log("idUser", idUser);
   return (
     <>
       <div>
@@ -18,20 +20,41 @@ export function SwapRowCells({ swap, IconComponent }: Props) {
           <Check className="h-4 w-4 text-muted-foreground/40" />
         )}
       </div>
+      <div
+        className={
+          swap.idEmployee2 === idUser ? "text-red-600" : "text-blue-500"
+        }
+      >
+        {swap.date ? format(new Date(swap.date), "dd.MM") : "-"}
+      </div>
+
+      <div
+        className={
+          swap.idEmployee2 === idUser
+            ? "text-red-600"
+            : "text-blue-600 tracking-wider"
+        }
+      >
+        {shortName(swap.employee)}
+        {" = "}
+        {swap.newShiftEmployee}
+      </div>
+      <div className="text-blue-400 text-[10px]">
+        {swap.dateAcceptedEmployee2?.split(" ")[1]}
+      </div>
+
+      <div
+        className={
+          swap.idEmployee2 === idUser
+            ? "text-red-600"
+            : "text-blue-600 tracking-wider"
+        }
+      >
+        {shortName(swap.employee2)} {" = "} {swap.newShiftEmployee2 || "_"}
+      </div>
+
       <div className="text-blue-400 text-[10px]">
         {swap.dateRegister?.split(" ")[1]}
-      </div>
-      <div className="text-blue-600">{shortName(swap.employee)}</div>
-      <div className="flex justify-center">
-        {IconComponent ? (
-          <IconComponent className="h-3 w-3 text-blue-700" />
-        ) : (
-          "-"
-        )}
-      </div>
-      <div className="text-blue-600">{shortName(swap.employee2)}</div>
-      <div className="text-blue-600">
-        {swap.date ? format(new Date(swap.date), "dd.MM") : "-"}
       </div>
     </>
   );

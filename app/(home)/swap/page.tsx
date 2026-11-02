@@ -14,7 +14,13 @@ const ROLE_KEY = {
 
 export default function Page() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center text-muted-foreground">
+          Loading...
+        </div>
+      }
+    >
       <SwapContent />
     </Suspense>
   );
@@ -24,20 +30,32 @@ async function SwapContent() {
   const session = await getServerSession(authOptions);
 
   if (!session) {
-    return <div>Failed to load session</div>;
+    return (
+      <div className="flex justify-center items-center text-muted-foreground">
+        Failed to load session
+      </div>
+    );
   }
 
   const role = session?.user?.role;
   const employees = await getEmployees();
 
   if (!employees) {
-    return <div>Failed to load employees</div>;
+    return (
+      <div className="flex justify-center items-center text-muted-foreground">
+        Failed to load employees
+      </div>
+    );
   }
 
   const roleKey = ROLE_KEY[role as keyof typeof ROLE_KEY];
 
   if (!roleKey) {
-    return <div>Failed to load role</div>;
+    return (
+      <div className="flex justify-center items-center text-muted-foreground">
+        Failed to load role
+      </div>
+    );
   }
 
   const now = new Date();

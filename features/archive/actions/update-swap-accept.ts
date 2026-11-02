@@ -6,7 +6,11 @@ import { updateTag } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
-export async function updateEmployeeAcceptance(uniqueKey: string, id: string) {
+export async function updateEmployeeAcceptance(
+  uniqueKey: string,
+  id: string,
+  dateAcceptedEmployee2: string,
+) {
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
 
@@ -26,7 +30,9 @@ export async function updateEmployeeAcceptance(uniqueKey: string, id: string) {
     if (item.isAcceptedEmployee2) return false;
 
     const newList = list.map((item: any) =>
-      item.id === id ? { ...item, isAcceptedEmployee2: true } : item,
+      item.id === id
+        ? { ...item, isAcceptedEmployee2: true, dateAcceptedEmployee2 }
+        : item,
     );
 
     tx.update(docRef, { data: newList });

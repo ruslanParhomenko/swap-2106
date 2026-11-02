@@ -3,7 +3,6 @@
 import { Fragment, useState } from "react";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { format, parse } from "date-fns";
-import { SHIFT_VALUES } from "../model/constants";
 import { useSession } from "next-auth/react";
 import { GetSwapData } from "../actions/get-swaps";
 import ArchiveSwapRow from "./archive-swap-row";
@@ -19,6 +18,14 @@ export function ArchivePage({ swapsList }: { swapsList: GetSwapData[] }) {
 
   const isAdmin = roleUser === ROLE_ADMIN;
   const sortedList = [...swapsList].sort((a, b) => b.id.localeCompare(a.id));
+
+  if (swapsList.length === 0) {
+    return (
+      <div className="flex justify-center items-center text-muted-foreground">
+        No swaps found
+      </div>
+    );
+  }
 
   return (
     <Table>
@@ -57,9 +64,6 @@ export function ArchivePage({ swapsList }: { swapsList: GetSwapData[] }) {
 
               {!isCollapsed &&
                 sortedData.map((swap) => {
-                  const IconComponent =
-                    SHIFT_VALUES[swap.typeSwap as keyof typeof SHIFT_VALUES];
-
                   return (
                     <ArchiveSwapRow
                       key={swap.id}
@@ -67,7 +71,6 @@ export function ArchivePage({ swapsList }: { swapsList: GetSwapData[] }) {
                       swap={swap}
                       isAdmin={isAdmin}
                       idUser={idUser}
-                      IconComponent={IconComponent}
                     />
                   );
                 })}

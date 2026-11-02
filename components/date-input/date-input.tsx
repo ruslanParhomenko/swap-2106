@@ -72,7 +72,7 @@ export default function DateInput({
                   onBlur={field.onBlur}
                   className={cn(
                     buttonVariants({ variant: "outline" }),
-                    "w-full justify-start font-normal h-12 tracking-wider border-2 bg-border",
+                    "w-full justify-start font-normal h-13 tracking-wider border-2 bg-border",
                     selected && "text-white bg-blue-500 justify-center",
                     !selected && "text-muted-foreground",
                     selected &&

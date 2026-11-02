@@ -6,20 +6,18 @@ import { SwipeBackground } from "./swipe-background";
 import { useSwapActions } from "../hooks/use-swipe-actions";
 import { SwapRowCells } from "./swap-row-cells";
 
-const GRID_COLS = "6% 8% 30% 8% 30% 10%";
+const GRID_COLS = "8% 8% 30% 8% 30% 8%";
 
 export default function ArchiveSwapRow({
   docId,
   swap,
   isAdmin,
   idUser,
-  IconComponent,
 }: {
   docId: string;
   swap: GetSwapData["data"][number];
   isAdmin: boolean;
-  idUser?: string;
-  IconComponent?: React.ElementType;
+  idUser: string;
 }) {
   const isAcceptedEmployee2 = swap.isAcceptedEmployee2;
   const isAcceptedAdmin = swap.isAcceptedAdmin;
@@ -50,7 +48,7 @@ export default function ArchiveSwapRow({
           <div
             {...handlers}
             className={cn(
-              "relative z-10 grid items-center justify-between text-center bg-background px-1 py-3 text-xs",
+              "relative z-10 grid items-center justify-between text-center bg-background py-3 text-xs px-0.5",
               isAcceptedAdmin &&
                 "**:text-muted-foreground! [&_svg]:text-muted-foreground!",
               isAcceptedEmployee2 && "**:text-green-600!",
@@ -65,7 +63,7 @@ export default function ArchiveSwapRow({
               transition: swiping ? "none" : "transform 200ms ease",
             }}
           >
-            <SwapRowCells swap={swap} IconComponent={IconComponent} />
+            <SwapRowCells swap={swap} idUser={idUser} />
           </div>
         </div>
       </TableCell>

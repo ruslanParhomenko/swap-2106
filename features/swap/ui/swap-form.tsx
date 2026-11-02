@@ -5,11 +5,7 @@ import { useSession } from "next-auth/react";
 import DateInput from "@/components/date-input/date-input";
 import SelectInput from "@/components/select/select-input";
 import { Button } from "@/components/ui/button";
-import {
-  NOT_WORKING_SHIFTS,
-  SHIFT_ACTIONS,
-  SHIFTS_VALUES,
-} from "../model/constants";
+import { NOT_WORKING_SHIFTS, SHIFT_ACTIONS } from "../model/constants";
 import { SchedulesResult } from "@/features/schedule/actions/get-schedules";
 import { rowShiftsType } from "@/features/schedule/model/type";
 import { MONTHS } from "@/utils/get-month-days";
@@ -28,6 +24,8 @@ export default function SwapForm({
   const selectedDate = useWatch({ control, name: "date" });
   const selectedTypeSwap = useWatch({ control, name: "typeSwap" });
   const selectedEmployee2 = useWatch({ control, name: "idEmployee2" });
+  const employee1Name = useWatch({ control, name: "employee" });
+  const employee2Name = useWatch({ control, name: "employee2" });
 
   const parsedDate = selectedDate ? new Date(selectedDate) : null;
   const hasDate = !!parsedDate && !isNaN(parsedDate.getTime());
@@ -44,13 +42,11 @@ export default function SwapForm({
     [schedules, month],
   );
 
-  const cellEmployee2 = selectedEmployee2
-    ? scheduleByMonth.find((r) => r.employeeId === selectedEmployee2)?.shifts[
-        day! - 1
-      ]
-    : "";
-
-  console.log("cellEmployee2", cellEmployee2);
+  const cellEmployee2 =
+    selectedEmployee2 && day
+      ? (scheduleByMonth.find((r) => r.employeeId === selectedEmployee2)
+          ?.shifts[day - 1] ?? "")
+      : "";
 
   const myCell: string =
     day && userId
@@ -67,27 +63,61 @@ export default function SwapForm({
         ? SHIFT_ACTIONS[0].value
         : SHIFT_ACTIONS[1].value;
 
+  const employees = useMemo(() => {
+    if (!day) return [];
+
+    const map = new Map<string, { value: string; label: string }>();
+    for (const row of scheduleByMonth) {
+      if (row.employeeId === userId) continue;
+
+      const cell = row.shifts[day - 1];
+      if (!cell || NOT_WORKING_SHIFTS.includes(cell)) continue;
+
+      map.set(row.employeeId, { value: row.employeeId, label: row.employee });
+    }
+    return [...map.values()];
+  }, [scheduleByMonth, userId, day]);
+
   const syncTypeSwap = useEffectEvent((next: string) => {
     if (getValues("typeSwap") === next) return;
     setValue("typeSwap", next, { shouldValidate: true });
+  });
+
+  const syncShifts = useEffectEvent(() => {
+    const opts = { shouldValidate: true };
+    setValue("newShiftEmployee", cellEmployee2 ?? "", opts);
+    setValue(
+      "newShiftEmployee2",
+      typeSwap === SHIFT_ACTIONS[0].value ? myCell : "",
+      opts,
+    );
   });
 
   useEffect(() => {
     syncTypeSwap(typeSwap);
   }, [typeSwap]);
 
-  // уникальные сотрудники, кроме текущего
-  const employees = useMemo(() => {
-    const map = new Map<string, { value: string; label: string }>();
-    for (const row of scheduleByMonth) {
-      if (row.employeeId === userId) continue;
-      map.set(row.employeeId, { value: row.employeeId, label: row.employee });
-    }
-    return [...map.values()];
-  }, [scheduleByMonth, userId]);
+  useEffect(() => {
+    if (!selectedEmployee2) return;
+    syncShifts();
+  }, [selectedEmployee2, cellEmployee2, myCell, typeSwap]);
+
+  useEffect(() => {
+    if (!selectedEmployee2) return;
+
+    const stillAvailable = employees.some((e) => e.value === selectedEmployee2);
+    if (hasDate && stillAvailable) return;
+
+    setValue("idEmployee2", "", { shouldValidate: true });
+    setValue("employee2", "");
+    setValue("newShiftEmployee", "");
+    setValue("newShiftEmployee2", "");
+  }, [hasDate, employees, selectedEmployee2, setValue]);
+
+  const dateLabel = hasDate ? parsedDate!.toLocaleDateString("ru-RU") : "";
 
   return (
-    <div className="flex flex-col gap-8 w-full md:w-120 px-2 mt-12 md:px-0">
+    <div className="flex flex-col gap-10 w-full md:w-120 px-2 mt-16 md:px-0">
       <DateInput
         fieldName="date"
         placeHolder="Выберите дату"
@@ -104,26 +134,30 @@ export default function SwapForm({
         placeHolder={employees.length > 0 ? "Выбрать сотрудника" : ""}
         data={employees}
         className="w-full"
-        disabled={employees.length === 0}
+        disabled={employees.length === 0 || !day || !selectedTypeSwap}
         onChange={(value) => {
           setValue("employee2", value?.label || "");
         }}
       />
-      <SelectInput
-        fieldName="shift"
-        placeHolder="Выберите смену"
-        data={SHIFTS_VALUES}
-      />
-      <div className="text-xs text-gray-600 flex items-center justify-center gap-2">
-        {selectedTypeSwap && (
-          <span>
-            {selectedTypeSwap}: {selectedEmployee2}
-          </span>
-        )}
-        {cellEmployee2 && <span>Смена сотрудника: {cellEmployee2}</span>}
-      </div>
 
-      <div className="my-8 flex justify-end">
+      {selectedEmployee2 && cellEmployee2 && (
+        <div className="flex flex-col gap-1 text-sm">
+          <span className="text-xs text-red-500 text-center my-1">
+            {dateLabel}
+          </span>
+          <div className="flex items-center justify-around">
+            <span className="text-blue-600">
+              {employee1Name} = <b>{cellEmployee2}</b>
+            </span>
+
+            <span className="text-green-600">
+              {employee2Name} = <b>{myCell || "выходной"}</b>
+            </span>
+          </div>
+        </div>
+      )}
+
+      <div className="my-4 flex justify-end">
         <Button
           type="submit"
           variant="secondary"
