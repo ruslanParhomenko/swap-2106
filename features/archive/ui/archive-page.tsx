@@ -9,9 +9,7 @@ import ArchiveSwapRow from "./archive-swap-row";
 import { ROLE_ADMIN } from "@/constants/role";
 
 export function ArchivePage({ swapsList }: { swapsList: GetSwapData[] }) {
-  console.log("ArchivePage", swapsList);
   const [collapsed, setCollapsed] = useState<string[]>([]);
-
   const { data: session } = useSession();
   const roleUser = session?.user?.role;
   const idUser = session?.user?.id!;
@@ -67,7 +65,7 @@ export function ArchivePage({ swapsList }: { swapsList: GetSwapData[] }) {
                   return (
                     <ArchiveSwapRow
                       key={swap.id}
-                      docId={doc.id.split("-").slice(0, 2).join("-")}
+                      docId={doc.id}
                       swap={swap}
                       isAdmin={isAdmin}
                       idUser={idUser}

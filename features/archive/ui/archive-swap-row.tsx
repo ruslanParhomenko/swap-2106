@@ -29,6 +29,7 @@ export default function ArchiveSwapRow({
   const { pending, acceptByEmployee, acceptByAdmin } = useSwapActions(
     docId,
     swap.id,
+    swap.date,
   );
 
   const { offset, passed, isRight, swiping, canSwipe, handlers } = useSwipeRow({
@@ -51,7 +52,7 @@ export default function ArchiveSwapRow({
               "relative z-10 grid items-center justify-between text-center bg-background py-3 text-xs px-0.5",
               isAcceptedAdmin &&
                 "**:text-muted-foreground! [&_svg]:text-muted-foreground!",
-              isAcceptedEmployee2 && "**:text-green-600!",
+              isAcceptedEmployee2 && !isAcceptedAdmin && "**:text-green-600!",
               canSwipe && "cursor-grab",
               pending && "opacity-50",
             )}

@@ -1,4 +1,5 @@
 "use server";
+import { invalidateEverywhere } from "@/app/actions/invalidateEverywhere/invalidate-everywhere";
 import { SCHEDULE_ACTION_TAG, SWAP_ACTION_TAG } from "@/constants/actions-tags";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/firebase";
@@ -8,11 +9,28 @@ import { updateTag } from "next/cache";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
+type SwapItem = {
+  id: string;
+  idEmployee: string;
+  idEmployee2: string;
+  newShiftEmployee: string;
+  newShiftEmployee2: string;
+  isAcceptedAdmin: boolean;
+  [key: string]: unknown;
+};
+
+type RowShift = {
+  employeeId: string;
+  shifts: string[];
+  [key: string]: unknown;
+};
+
 export async function updateSwapStatusAdmin(
   docId: string,
   swapId: string,
   value: boolean,
   dateAcceptedAdmin: string,
+  date: string,
 ) {
   const session = await getServerSession(authOptions);
 
@@ -25,6 +43,7 @@ export async function updateSwapStatusAdmin(
 
     const year = docId.split("-")[0];
     const month = MONTHS[Number(docId.split("-")[1]) - 1];
+    const day = parseInt(date.split("-")[2], 10);
 
     const refSchedule = db
       .collection(SCHEDULE_ACTION_TAG)
@@ -36,36 +55,47 @@ export async function updateSwapStatusAdmin(
 
     await db.runTransaction(async (tx) => {
       const snap = await tx.get(ref);
-      if (!snap.exists) throw new Error("not found");
+      if (!snap.exists) throw new Error("swap doc not found");
 
-      const list = (snap.data()?.data ?? []) as Array<{ id: string }>;
+      const scheduleSnap = await tx.get(refSchedule);
+      if (!scheduleSnap.exists) throw new Error("schedule not found");
+
+      const list = (snap.data()?.data ?? []) as SwapItem[];
+      const swap = list.find((s) => s.id === swapId);
+      if (!swap) throw new Error("swap not found");
+
       const next = list.map((s) =>
         s.id === swapId
           ? { ...s, isAcceptedAdmin: value, dateAcceptedAdmin }
           : s,
       );
 
-      console.log(
-        "list",
-        list.find((s) => s.id === swapId),
-      );
+      tx.update(ref, { data: next });
 
-      // tx.update(ref, { data: next });
+      if (value) {
+        const scheduleData = scheduleSnap.data() as { rowShifts?: RowShift[] };
+        const rowShifts = scheduleData.rowShifts ?? [];
+        const idx = day - 1;
 
-      const scheduleSnap = await tx.get(refSchedule);
-      if (!scheduleSnap.exists) throw new Error("not found");
+        const updates: Record<string, string> = {
+          [swap.idEmployee]: swap.newShiftEmployee,
+          [swap.idEmployee2]: swap.newShiftEmployee2,
+        };
 
-      const scheduleData = scheduleSnap.data() as { rowShifts?: any[] };
-      const nextSchedule = scheduleData.rowShifts?.map((row) =>
-        row.id === swapId
-          ? { ...row, isAcceptedAdmin: value, dateAcceptedAdmin }
-          : row,
-      );
+        const nextSchedule = rowShifts.map((row) => {
+          if (!(row.employeeId in updates)) return row;
 
-      // tx.update(refSchedule, { rowShifts: nextSchedule });
+          const shifts = [...row.shifts];
+          shifts[idx] = updates[row.employeeId];
+          return { ...row, shifts };
+        });
+
+        tx.update(refSchedule, { rowShifts: nextSchedule });
+      }
     });
 
-    // updateTag(SWAP_ACTION_TAG);
+    await invalidateEverywhere(SCHEDULE_ACTION_TAG);
+    updateTag(SWAP_ACTION_TAG);
 
     return { success: true };
   } catch (e) {

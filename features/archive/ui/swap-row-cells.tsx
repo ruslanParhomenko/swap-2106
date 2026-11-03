@@ -9,8 +9,6 @@ type Props = {
 };
 
 export function SwapRowCells({ swap, idUser }: Props) {
-  console.log("swap", swap);
-  console.log("idUser", idUser);
   return (
     <>
       <div>

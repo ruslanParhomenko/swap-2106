@@ -4,7 +4,7 @@ import { updateEmployeeAcceptance } from "../actions/update-swap-accept";
 import { updateSwapStatusAdmin } from "../actions/update-swap-admin";
 import { formatDateTime } from "@/utils/get-formatted-date";
 
-export function useSwapActions(docId: string, swapId: string) {
+export function useSwapActions(docId: string, swapId: string, date: string) {
   const [pending, setPending] = useState(false);
 
   const run = async (
@@ -47,6 +47,7 @@ export function useSwapActions(docId: string, swapId: string) {
           swapId,
           true,
           dateAcceptedAdmin,
+          date,
         );
         if (res?.error) throw new Error("Failed to accept swap by admin");
       },

@@ -33,8 +33,6 @@ export default function useSwapForm() {
       dateRegister: currentDateTime,
     };
 
-    console.log(formattedData);
-
     await createSwap({
       data: formattedData,
     });

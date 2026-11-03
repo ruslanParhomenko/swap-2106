@@ -22,13 +22,13 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/no-access", request.url));
   }
 
-  if (token.role === "staff" && pathname !== "/schedule") {
-    const currentDate = new Date();
-    const month = MONTHS[currentDate.getMonth()];
-    return NextResponse.redirect(
-      new URL(`/schedule?month=${month}`, request.url),
-    );
-  }
+  // if (token.role === "staff" && pathname !== "/schedule") {
+  //   const currentDate = new Date();
+  //   const month = MONTHS[currentDate.getMonth()];
+  //   return NextResponse.redirect(
+  //     new URL(`/schedule?month=${month}`, request.url),
+  //   );
+  // }
 
   return NextResponse.next();
 }
