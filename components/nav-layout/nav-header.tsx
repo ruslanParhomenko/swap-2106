@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import LogOutButton from "../buttons/logout-button";
 import ThemesButton from "../buttons/themes-button";
 import { getServerSession } from "next-auth";

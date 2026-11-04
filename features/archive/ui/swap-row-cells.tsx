@@ -2,6 +2,7 @@ import { Check, CheckCheck } from "lucide-react";
 import { format } from "date-fns";
 import type { GetSwapData } from "../actions/get-swaps";
 import { shortName } from "@/utils/short-name";
+import { cn } from "@/lib/utils";
 
 type Props = {
   swap: GetSwapData["data"][number];
@@ -11,7 +12,7 @@ type Props = {
 export function SwapRowCells({ swap, idUser }: Props) {
   return (
     <>
-      <div>
+      <div className="flex items-center justify-center">
         {swap.isAcceptedEmployee2 ? (
           <CheckCheck className="h-4 w-4 text-green-600" />
         ) : (
@@ -27,11 +28,12 @@ export function SwapRowCells({ swap, idUser }: Props) {
       </div>
 
       <div
-        className={
+        className={cn(
+          "text-start pl-1",
           swap.idEmployee2 === idUser
             ? "text-red-600"
-            : "text-blue-600 tracking-wider"
-        }
+            : "text-blue-600 tracking-wider",
+        )}
       >
         {shortName(swap.employee)}
         {" = "}
@@ -42,11 +44,12 @@ export function SwapRowCells({ swap, idUser }: Props) {
       </div>
 
       <div
-        className={
+        className={cn(
+          "text-start pl-1",
           swap.idEmployee2 === idUser
             ? "text-red-600"
-            : "text-blue-600 tracking-wider"
-        }
+            : "text-blue-600 tracking-wider",
+        )}
       >
         {shortName(swap.employee2)} {" = "} {swap.newShiftEmployee2 || "_"}
       </div>

@@ -9,7 +9,11 @@ import ArchiveSwapRow from "./archive-swap-row";
 import { ROLE_ADMIN } from "@/constants/role";
 
 export function ArchivePage({ swapsList }: { swapsList: GetSwapData[] }) {
-  const [collapsed, setCollapsed] = useState<string[]>([]);
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1;
+
+  const [isClosed, setIsClosed] = useState<string[]>([]);
+
   const { data: session } = useSession();
   const roleUser = session?.user?.role;
   const idUser = session?.user?.id!;
@@ -29,7 +33,10 @@ export function ArchivePage({ swapsList }: { swapsList: GetSwapData[] }) {
     <Table>
       <TableBody>
         {sortedList.map((doc) => {
-          const isCollapsed = collapsed.includes(doc.id);
+          console.log("doc.id", doc);
+          const numberDocMonth = parseInt(doc.id.split("-")[1]);
+          const isCollapsed =
+            numberDocMonth !== currentMonth && !isClosed.includes(doc.id);
 
           const sortedData = [...doc.data].sort(
             (a, b) =>
@@ -42,7 +49,7 @@ export function ArchivePage({ swapsList }: { swapsList: GetSwapData[] }) {
               <TableRow
                 className="cursor-pointer border-0 [&>td]:py-2"
                 onClick={() =>
-                  setCollapsed((prev) =>
+                  setIsClosed((prev) =>
                     prev.includes(doc.id)
                       ? prev.filter((id) => id !== doc.id)
                       : [...prev, doc.id],
@@ -61,17 +68,15 @@ export function ArchivePage({ swapsList }: { swapsList: GetSwapData[] }) {
               </TableRow>
 
               {!isCollapsed &&
-                sortedData.map((swap) => {
-                  return (
-                    <ArchiveSwapRow
-                      key={swap.id}
-                      docId={doc.id}
-                      swap={swap}
-                      isAdmin={isAdmin}
-                      idUser={idUser}
-                    />
-                  );
-                })}
+                sortedData.map((swap) => (
+                  <ArchiveSwapRow
+                    key={swap.id}
+                    docId={doc.id}
+                    swap={swap}
+                    isAdmin={isAdmin}
+                    idUser={idUser}
+                  />
+                ))}
             </Fragment>
           );
         })}

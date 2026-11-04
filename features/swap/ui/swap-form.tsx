@@ -117,7 +117,7 @@ export default function SwapForm({
   const dateLabel = hasDate ? parsedDate!.toLocaleDateString("ru-RU") : "";
 
   return (
-    <div className="flex flex-col gap-10 w-full md:w-120 px-2 mt-16 md:px-0">
+    <div className="flex flex-col gap-10 w-full md:w-[50dvw]  px-2  md:px-0">
       <DateInput
         fieldName="date"
         placeHolder="Выберите дату"
@@ -162,9 +162,9 @@ export default function SwapForm({
           type="submit"
           variant="secondary"
           disabled={!isValid}
-          className={`py-2 h-12 px-4 rounded-md text-white transition-colors w-32 ${
+          className={`py-2 h-11 px-4 rounded-md transition-colors w-32 ${
             !isValid
-              ? "bg-gray-400 cursor-not-allowed"
+              ? "bg-gray-200 cursor-not-allowed"
               : "text-blue-600 font-bold"
           }`}
         >

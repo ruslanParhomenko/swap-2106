@@ -1,5 +1,5 @@
 "use server";
-import { invalidateEverywhere } from "@/app/actions/invalidateEverywhere/invalidate-everywhere";
+import { invalidateEverywhere } from "@/app/actions/invalidate-everywhere";
 import { SCHEDULE_ACTION_TAG, SWAP_ACTION_TAG } from "@/constants/actions-tags";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/firebase";

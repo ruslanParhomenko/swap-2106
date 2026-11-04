@@ -26,7 +26,7 @@ export default function FormWrapper<T extends FieldValues>({
     <FormProvider {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit, onError)}
-        className={cn("w-full", className)}
+        className={cn("w-full", className, "flex items-center justify-center")}
       >
         {children}
       </form>

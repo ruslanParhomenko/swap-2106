@@ -1,10 +1,10 @@
+import { Suspense } from "react";
 import GoogleButton from "@/components/buttons/google-button";
-import AuthRedirect from "@/providers/auth-redirect";
 
 export default function Page() {
   return (
-    <AuthRedirect>
+    <Suspense>
       <GoogleButton />
-    </AuthRedirect>
+    </Suspense>
   );
 }

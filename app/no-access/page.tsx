@@ -1,6 +1,6 @@
-import { NotData } from "@/components/pages/not-data";
+import { NoAccess } from "@/components/pages/no-access";
 
 const Page = () => {
-  return <NotData exitButton={true} />;
+  return <NoAccess exitButton={true} />;
 };
 export default Page;

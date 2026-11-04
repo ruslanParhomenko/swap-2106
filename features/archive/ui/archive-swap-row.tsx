@@ -6,7 +6,7 @@ import { SwipeBackground } from "./swipe-background";
 import { useSwapActions } from "../hooks/use-swipe-actions";
 import { SwapRowCells } from "./swap-row-cells";
 
-const GRID_COLS = "8% 8% 30% 8% 30% 8%";
+const GRID_COLS = "6% 8% 30% 9% 30% 9%";
 
 export default function ArchiveSwapRow({
   docId,
@@ -41,7 +41,7 @@ export default function ArchiveSwapRow({
   });
 
   return (
-    <TableRow className="hover:bg-transparent">
+    <TableRow className="hover:bg-transparent border-0!">
       <TableCell colSpan={6} className="p-0">
         <div className="relative overflow-hidden">
           <SwipeBackground isRight={isRight} passed={passed} visible={true} />
@@ -49,7 +49,7 @@ export default function ArchiveSwapRow({
           <div
             {...handlers}
             className={cn(
-              "relative z-10 grid items-center justify-between text-center bg-background py-3 text-xs px-0.5",
+              "relative z-10 grid items-center justify-between text-center bg-background py-3 text-xs px-1",
               isAcceptedAdmin &&
                 "**:text-muted-foreground! [&_svg]:text-muted-foreground!",
               isAcceptedEmployee2 && !isAcceptedAdmin && "**:text-green-600!",

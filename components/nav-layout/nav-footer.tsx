@@ -1,33 +1,22 @@
 "use client";
-
 import { useTransition } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSwipeable } from "react-swipeable";
 import { TabsLine } from "../ui/tabs-line";
-import { INITIAL_LINE_ITEM, NAV_LINE_ITEMS } from "./constants";
-import { useSession } from "next-auth/react";
+import { NAV_LINE_ITEMS } from "@/constants/nav-items";
 
 export default function NavFooter() {
   const pathname = usePathname();
   const mainRoute = pathname.split("/")[1] || "";
-  const searchParams = useSearchParams();
-
-  const { data } = useSession();
-
-  const userRole = data?.user?.role;
-  const isStaff = userRole === "staff";
-
-  const initialTab = mainRoute || INITIAL_LINE_ITEM;
+  const initialTab = mainRoute;
 
   const router = useRouter();
 
   const [isPending, startTransition] = useTransition();
 
   const handleTabChange = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-
     startTransition(() => {
-      router.replace(`${value}?${params.toString()}`, { scroll: false });
+      router.replace(value, { scroll: false });
     });
   };
 
@@ -42,8 +31,6 @@ export default function NavFooter() {
       handleTabChange(NAV_LINE_ITEMS[0]);
     },
   });
-
-  if (isStaff) return null;
 
   return (
     <div
